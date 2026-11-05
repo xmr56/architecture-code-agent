@@ -1,0 +1,236 @@
+openapi: 3.0.0
+info:
+  title: Space Fractions API
+  description: API for the Space Fractions game (external contract).
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /play:
+    get:
+      summary: Play the game (start a new game)
+      operationId: playGame
+      responses:
+        "200":
+          description: Game started
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [gameId, state, totalQuestions, firstQuestion]
+                properties:
+                  gameId:
+                    type: integer
+                    description: Game ID
+                  state:
+                    type: string
+                    enum: [Playing, Paused, GameOver]
+                  totalQuestions:
+                    type: integer
+                  firstQuestion:
+                    $ref: "#/components/schemas/Question"
+        "404":
+          description: No questions available
+  /games/{gameId}/question:
+    get:
+      summary: Get the current question for a game
+      operationId: currentQuestion
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Current question
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gameId:
+                    type: integer
+                  state:
+                    type: string
+                  question:
+                    $ref: "#/components/schemas/Question"
+        "404":
+          description: Game not found
+  /games/{gameId}/answer:
+    post:
+      summary: Submit an answer for the current question
+      operationId: submitAnswer
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [answer]
+              properties:
+                answer:
+                  type: string
+                  description: Fraction answer as "a/b" or whole number
+      responses:
+        "200":
+          description: Answer result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gameId:
+                    type: integer
+                  correct:
+                    type: boolean
+                  gameOver:
+                    type: boolean
+                  score:
+                    $ref: "#/components/schemas/Score"
+        "400":
+          description: answer required
+        "404":
+          description: Game not found
+  /games/{gameId}/score:
+    get:
+      summary: View the final score of a game
+      operationId: viewScore
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Score
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gameId:
+                    type: integer
+                  state:
+                    type: string
+                  score:
+                    $ref: "#/components/schemas/Score"
+        "404":
+          description: Game not found
+        "409":
+          description: Score not finalized (game not over)
+  /games/{gameId}/pause:
+    post:
+      summary: Pause a game
+      operationId: pauseGame
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Paused
+  /games/{gameId}/resume:
+    post:
+      summary: Resume a paused game
+      operationId: resumeGame
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Resumed
+  /games/{gameId}/gameover:
+    post:
+      summary: End a game
+      operationId: endGame
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Game over
+  /admin/questions:
+    post:
+      summary: Add or update a question (admin)
+      operationId: updateQuestions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [prompt, answer]
+              properties:
+                category:
+                  type: string
+                prompt:
+                  type: string
+                options:
+                  type: array
+                  items:
+                    type: string
+                answer:
+                  type: string
+      responses:
+        "201":
+          description: Question created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        "400":
+          description: Invalid input
+  /help:
+    get:
+      summary: View help
+      operationId: viewHelp
+      responses:
+        "200":
+          description: Help text
+  /health:
+    get:
+      summary: Health and metrics counters
+      operationId: health
+      responses:
+        "200":
+          description: Health status
+components:
+  schemas:
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+        category:
+          type: string
+        prompt:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        answer:
+          type: string
+    Score:
+      type: object
+      properties:
+        correct:
+          type: integer
+        total:
+          type: integer

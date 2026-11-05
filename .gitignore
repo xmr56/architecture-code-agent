@@ -1,0 +1,16 @@
+runtime/
+generated_runs/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+build/
+dist/
+*.spec
+*.exe
+*.log
+.env
+.env.*
+npm-cache/
+*.key
+*.pem

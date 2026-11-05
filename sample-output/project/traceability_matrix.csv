@@ -1,0 +1,9 @@
+Requirement ID,Short Text,Diagram(s),Component(s),Artifact filename(s),Rationale
+FR-1,Play game,UseCaseDiagram; SequenceDiagram1; ActivityDiagram; StateDiagram,GameComponent,openapi.yaml; internal.proto; lib/game.js,Allows users to play the game and submit answers
+FR-1a,View score,UseCaseDiagram; ActivityDiagram,GameComponent,openapi.yaml; lib/game.js,Reports final score after game over
+FR-1b,View help,UseCaseDiagram,GameComponent,openapi.yaml; lib/app.js,Provides in-game help text
+FR-2,Update questions,UseCaseDiagram; SequenceDiagram2; CollaborationDiagram2,QuestionComponent; AdminComponent,openapi.yaml; sql/game_ddl.sql; lib/questions.js,Admin adds/updates question content
+NFR-1,Performance,SequenceDiagram1; DeploymentDiagram,GameComponent; QuestionComponent,internal.proto; k8s/spacefractions-deployment.yaml; openapi.yaml,Replicas + async-friendly endpoints keep response fast
+ASR-1,Data durability,DeploymentDiagram,QuestionComponent,sql/game_ddl.sql,Persistent questions/games tables enable recovery
+ASR-2,Security,DeploymentDiagram,GameComponent; UserComponent,openapi.yaml; ASSUMPTIONS.md,OAuth2 + TLS documented (not implemented in slice)
+GAP,Unenumerated FR/NFR/ASR IDs,All diagrams,Unknown,none,Source only enumerates FR-1/NFR-1/ASR-1 explicitly
