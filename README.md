@@ -26,9 +26,7 @@ docs/                   设计、实验与验收说明
 
 ### 方式A：Windows exe
 
-若仓库Releases中提供CodeAgent.exe，下载后双击。exe包含Python/Tk、Node和npm；目标电脑不必预装Python或Node。仍需联网及有效的DeepSeek官方API Key。
-
-没有Release附件时请采用下方源码方式，或按第7节自行打包。不能把仓库公开等同于已有exe下载。
+在 [Windows v1.0.0](https://github.com/xmr56/architecture-code-agent/releases/tag/v1.0.0) 下载 [CodeAgent.exe](https://github.com/xmr56/architecture-code-agent/releases/download/v1.0.0/CodeAgent.exe)，然后双击启动。exe 包含 Python/Tk、Node 和 npm，目标电脑无需预装 Python 或 Node。生成项目时需要联网，并在界面中填写有效的 DeepSeek 官方 API Key。
 
 ### 方式B：源码
 
